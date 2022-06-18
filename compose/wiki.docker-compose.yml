@@ -1,0 +1,25 @@
+version: '3.6'
+services:
+  wiki:
+    image: requarks/wiki:2
+    container_name: wiki
+    hostname: wiki.${URL}
+    restart: always
+    environment:
+      DB_TYPE: sqlite
+    networks:
+      - traefik_proxy
+    labels:
+      - traefik.http.routers.vault.rule=Host(`wiki.${URL}`)
+      - traefik.http.routers.vault.entrypoints=https
+      - traefik.http.routers.vault.tls=true
+      - traefik.http.routers.vault.tls.certresolver=letsencrypt
+      - traefik.http.services.vault.loadbalancer.server.port=3000
+      - service.alwayson=false
+      - svc.tier=dev
+      - svc.stack=home
+
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy

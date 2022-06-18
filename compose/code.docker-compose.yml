@@ -1,0 +1,24 @@
+version: "3.3"
+services:
+  vscode_server:
+    image: codercom/code-server
+    container_name: code-server
+    networks:
+      - traefik_proxy
+    volumes:
+      - ~/Documents:/home/coder/project
+      - ~/.dockerServices/code/:/home/coder/.config/code-server/
+    restart: unless-stopped
+    labels:
+      - traefik.http.routers.code-server.rule=Host(`code.${URL}`)
+      - traefik.http.routers.code-server.entrypoints=https
+      - traefik.http.routers.code-server.tls=true
+      - traefik.http.routers.code-server.tls.certresolver=letsencrypt
+      - traefik.http.services.code-server.loadbalancer.server.port=8080
+      - svc.tier=dev
+      - svc.stack=home
+
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy

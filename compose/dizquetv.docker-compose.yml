@@ -1,0 +1,23 @@
+version: "3.3"
+services:
+  dizquetv:
+    container_name: dizquetv
+    image: vexorian/dizquetv:1.5.0
+    networks:
+      - traefik_proxy
+    volumes:
+      - ~/.media-config/dizque:/home/node/app/.dizquetv
+    restart: unless-stopped
+    labels:
+      - traefik.http.routers.dizquetv.rule=Host(`tv.${URL}`)
+      - traefik.http.routers.dizquetv.entrypoints=https
+      - traefik.http.routers.dizquetv.tls=true
+      - traefik.http.routers.dizquetv.tls.certresolver=letsencrypt
+      - traefik.http.services.dizquetv.loadbalancer.server.port=8000
+      - svc.tier=core
+      - svc.stack=media
+
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy

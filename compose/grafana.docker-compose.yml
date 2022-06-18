@@ -1,0 +1,24 @@
+version: "3.3"
+services:
+  grafana:  
+    image: grafana/grafana:latest
+    container_name: grafana
+    hostname: grafana.ndser.page
+    networks:
+      - traefik_proxy
+    restart: unless-stopped
+    volumes:
+      - ~/.dockerServices/grafana:/var/lib/grafana
+    labels:
+      - traefik.http.routers.grafana.rule=Host(`grafana.${URL}`)
+      - traefik.http.routers.grafana.entrypoints=https
+      - traefik.http.routers.grafana.tls=true
+      - traefik.http.routers.grafana.tls.certresolver=letsencrypt
+      - traefik.http.services.grafana.loadbalancer.server.port=3000
+      - svc.tier=dev
+      - svc.stack=home
+
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy

@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+  traefik:
+    image: traefik:2.4
+    container_name: traefik
+    restart: unless-stopped
+    networks:
+      - traefik_proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../config/traefik-config.yml:/traefik.yml
+      - ../local_only/acme.json:/acme.json
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      # Traefik configuration for the dashboard
+      - traefik.http.routers.traefik-https.rule=Host(`traefik.${URL}`)
+      - traefik.http.routers.traefik-https.entrypoints=https
+      - traefik.http.routers.traefik-https.tls=true
+      - traefik.http.routers.traefik-https.tls.certresolver=letsencrypt
+      - traefik.http.routers.traefik-https.service=api@internal
+      - svc.tier=core
+      - svc.stack=home
+    extra_hosts:
+      - host.docker.internal:172.17.0.1
+
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy
