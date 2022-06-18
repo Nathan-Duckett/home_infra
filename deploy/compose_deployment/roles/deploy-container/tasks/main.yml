@@ -1,0 +1,7 @@
+- name: "Start docker service: {{ stack_file_name }}"
+  community.docker.docker_compose:
+    project_src: ../../compose
+    env_file: ../../.env
+    debug: true
+    files: 
+      - "{{ stack_file_name }}"

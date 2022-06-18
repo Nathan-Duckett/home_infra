@@ -1,0 +1,30 @@
+- name: Deploying Docker-Compose Services
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Deploy Core Services
+      include_role: 
+        name: ./roles/deploy-container
+      vars:
+        stack_file_name: "{{ item }}"
+      with_items: 
+        - bitwarden.docker-compose.yml
+        - dizquetv.docker-compose.yml
+        - home-assistant.docker-compose.yml
+        - media.docker-compose.yml
+        - plausible.docker-compose.yml
+        - traefik.docker-compose.yml
+        - uptime-kuma.docker-compose.yml
+    - name: Deploy Dev Services
+      include_role: 
+        name: ./roles/deploy-container
+      vars:
+        stack_file_name: "{{ item }}"
+      with_items: 
+        - code.docker-compose.yml
+        - gitea.docker-compose.yml
+        - grafana.docker-compose.yml
+        - portainer.docker-compose.yml
+        - prometheus.docker-compose.yml
+        - wiki.docker-compose.yml
+  
