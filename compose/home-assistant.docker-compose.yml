@@ -23,6 +23,8 @@ services:
       - traefik.http.routers.homeassistant.service=homeassistant
       - traefik.http.routers.homeassistant.tls.certresolver=letsencrypt
       - traefik.http.services.homeassistant.loadbalancer.server.port=8123
+    extra_hosts:
+      - host.docker.internal:172.17.0.1
 
 networks:
   traefik_proxy:
