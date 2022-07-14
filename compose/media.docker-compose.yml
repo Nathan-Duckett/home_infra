@@ -72,6 +72,30 @@ services:
       - svc.tier=core
       - svc.stack=media
     restart: always
+  # Readarr installation
+  readarr:
+    image: linuxserver/readarr:develop
+    container_name: readarr
+    networks:
+      - traefik_proxy
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Pacific/Auckland
+    volumes:
+      - ~/.media-config/readarr:/config
+      - /mnt/lacie/books:/books
+      - /mnt/mini/download:/downloads
+    labels:
+      - traefik.http.routers.readarr.rule=Host(`readarr.${URL}`)
+      - traefik.http.routers.readarr.entrypoints=https
+      - traefik.http.routers.readarr.tls=true
+      - traefik.http.routers.readarr.tls.certresolver=letsencrypt
+      - traefik.http.routers.readarr.service=readarr
+      - traefik.http.services.readarr.loadbalancer.server.port=8787
+      - svc.tier=core
+      - svc.stack=media
+    restart: always
   bazarr:
     image: linuxserver/bazarr
     container_name: bazarr
