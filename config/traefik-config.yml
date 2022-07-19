@@ -18,7 +18,7 @@ entryPoints:
         certResolver: letsencrypt
         domains:
           - main: $URL
-            sans: "*$URL"
+            sans: "*.$URL"
           - main: $INTERNAL_URL
             sans: "*.$INTERNAL_URL"
       
