@@ -1,0 +1,28 @@
+version: "3.3"
+services:
+  snippet_box:
+    image: pawelmalak/snippet-box:latest
+    container_name: snippet_box
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    restart: always
+    networks:
+      - traefik_proxy
+    volumes:
+      - ${DOCKER_SERVICES_CONFIG_LOCATION}/snippet_box:/app/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - traefik.http.routers.snippets.rule=Host(`snippets.${INTERNAL_URL}`)
+      - traefik.http.routers.snippets.entrypoints=https
+      - traefik.http.routers.snippets.tls=true
+      - traefik.http.routers.snippets.tls.certresolver=letsencrypt
+      - traefik.http.services.snippets.loadbalancer.server.port=5000
+      - svc.tier=dev
+      - svc.stack=home
+
+networks:
+  traefik_proxy:
+    external:
+      name: traefik_proxy
