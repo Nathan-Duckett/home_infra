@@ -11,12 +11,11 @@ services:
       - PGID=1000
       - TZ=Pacific/Auckland
     volumes:
-      - ~/.media-config/sonarr:/config
-      - /mnt/lacie/Television:/tv/lacie
-      - /mnt/media/Videos/Television:/tv/media
-      - /mnt/mini/download:/downloads
+      - ${MEDIA_CONFIG_LOCATION}/sonarr:/config
+      - ${MEDIA_LOCATION}/tv:/tv
+      - ${DOWNLOADS_LOCATION}:/downloads
     labels:
-      - traefik.http.routers.sonarr.rule=Host(`sonarr.${URL}`)
+      - traefik.http.routers.sonarr.rule=Host(`sonarr.${INTERNAL_URL}`)
       - traefik.http.routers.sonarr.entrypoints=https
       - traefik.http.routers.sonarr.tls=true
       - traefik.http.routers.sonarr.tls.certresolver=letsencrypt
@@ -36,12 +35,11 @@ services:
       - PGID=1000
       - TZ=Pacific/Auckland
     volumes:
-      - ~/.media-config/radarr:/config
-      - /mnt/lacie/Movies:/movies/lacie
-      - /mnt/mini/Videos/Movies:/movies/mini
-      - /mnt/mini/download:/downloads
+      - ${MEDIA_CONFIG_LOCATION}/radarr:/config
+      - ${MEDIA_LOCATION}/movies:/movies
+      - ${DOWNLOADS_LOCATION}:/downloads
     labels:
-      - traefik.http.routers.radarr.rule=Host(`radarr.${URL}`)
+      - traefik.http.routers.radarr.rule=Host(`radarr.${INTERNAL_URL}`)
       - traefik.http.routers.radarr.entrypoints=https
       - traefik.http.routers.radarr.tls=true
       - traefik.http.routers.radarr.tls.certresolver=letsencrypt
@@ -60,11 +58,11 @@ services:
       - PGID=1000
       - TZ=Pacific/Auckland
     volumes:
-      - ~/.media-config/lidarr:/config
-      - /mnt/mini/Music:/music
-      - /mnt/mini/download:/downloads
+      - ${MEDIA_CONFIG_LOCATION}/lidarr:/config
+      - ${MEDIA_LOCATION}/music:/music
+      - ${DOWNLOADS_LOCATION}:/downloads
     labels:
-      - traefik.http.routers.lidarr.rule=Host(`lidarr.${URL}`)
+      - traefik.http.routers.lidarr.rule=Host(`lidarr.${INTERNAL_URL}`)
       - traefik.http.routers.lidarr.entrypoints=https
       - traefik.http.routers.lidarr.tls=true
       - traefik.http.routers.lidarr.tls.certresolver=letsencrypt
@@ -83,11 +81,11 @@ services:
       - PGID=1000
       - TZ=Pacific/Auckland
     volumes:
-      - ~/.media-config/readarr:/config
-      - /mnt/lacie/books:/books
-      - /mnt/mini/download:/downloads
+      - ${MEDIA_CONFIG_LOCATION}/readarr:/config
+      - ${MEDIA_LOCATION}/books:/books
+      - ${DOWNLOADS_LOCATION}:/downloads
     labels:
-      - traefik.http.routers.readarr.rule=Host(`readarr.${URL}`)
+      - traefik.http.routers.readarr.rule=Host(`readarr.${INTERNAL_URL}`)
       - traefik.http.routers.readarr.entrypoints=https
       - traefik.http.routers.readarr.tls=true
       - traefik.http.routers.readarr.tls.certresolver=letsencrypt
@@ -106,13 +104,13 @@ services:
       - PGID=1000
       - TZ=Pacific/Auckland
     volumes:
-      - ~/.media-config/bazarr:/config
+      - ${MEDIA_CONFIG_LOCATION}/bazarr:/config
       - /mnt/lacie/Movies:/movies/lacie
       - /mnt/mini/Videos/Movies:/movies/mini
       - /mnt/lacie/Television:/tv/lacie
       - /mnt/media/Videos/Television:/tv/media
     labels:
-      - traefik.http.routers.bazarr.rule=Host(`bazarr.${URL}`)
+      - traefik.http.routers.bazarr.rule=Host(`bazarr.${INTERNAL_URL}`)
       - traefik.http.routers.bazarr.entrypoints=https
       - traefik.http.routers.bazarr.tls=true
       - traefik.http.routers.bazarr.tls.certresolver=letsencrypt
@@ -131,9 +129,9 @@ services:
       - PGID=1000
       - TZ=Pacific/Auckland
     volumes:
-      - ~/.media-config/ombi:/config
+      - ${MEDIA_CONFIG_LOCATION}/ombi:/config
     labels:
-      - traefik.http.routers.ombi.rule=Host(`ombi.${URL}`)
+      - traefik.http.routers.ombi.rule=Host(`ombi.${INTERNAL_URL}`)
       - traefik.http.routers.ombi.entrypoints=https
       - traefik.http.routers.ombi.tls=true
       - traefik.http.routers.ombi.tls.certresolver=letsencrypt
@@ -152,10 +150,10 @@ services:
       - PGID=1000
       - TZ=Pacific/Auckland
     volumes:
-      - ~/.media-config/jackett:/config
-      - /mnt/mini/download:/downloads
+      - ${MEDIA_CONFIG_LOCATION}/jackett:/config
+      - ${DOWNLOADS_LOCATION}:/downloads
     labels:
-      - traefik.http.routers.jackett.rule=Host(`jackett.${URL}`)
+      - traefik.http.routers.jackett.rule=Host(`jackett.${INTERNAL_URL}`)
       - traefik.http.routers.jackett.entrypoints=https
       - traefik.http.routers.jackett.tls=true
       - traefik.http.routers.jackett.tls.certresolver=letsencrypt
@@ -174,10 +172,10 @@ services:
       - PGID=1000
       - TZ=Pacific/Auckland
     volumes:
-      - ~/.media-config/tautulli:/config
+      - ${MEDIA_CONFIG_LOCATION}/tautulli:/config
       - /var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Logs:/logs
     labels:
-      - traefik.http.routers.tautulli.rule=Host(`tautulli.${URL}`)
+      - traefik.http.routers.tautulli.rule=Host(`tautulli.${INTERNAL_URL}`)
       - traefik.http.routers.tautulli.entrypoints=https
       - traefik.http.routers.tautulli.tls=true
       - traefik.http.routers.tautulli.tls.certresolver=letsencrypt
@@ -201,7 +199,7 @@ services:
       - 8999:8999
       - 8999:8999/udp
     labels:
-      - traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.${URL}`)
+      - traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.${INTERNAL_URL}`)
       - traefik.http.routers.qbittorrent.entrypoints=https
       - traefik.http.routers.qbittorrent.tls=true
       - traefik.http.routers.qbittorrent.tls.certresolver=letsencrypt
@@ -209,8 +207,8 @@ services:
       - svc.tier=core
       - svc.stack=media
     volumes:
-      - "~/.media-config/qBittorrent:/config:cached"
-      - "/mnt/mini/download:/downloads:cached"
+      - "${MEDIA_CONFIG_LOCATION}/qBittorrent:/config:cached"
+      - "${DOWNLOADS_LOCATION}:/downloads:cached"
 
 
 networks:
